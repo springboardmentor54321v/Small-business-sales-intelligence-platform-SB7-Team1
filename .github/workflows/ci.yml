@@ -1,0 +1,44 @@
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [backend, frontend, ai]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        if: matrix.service == 'backend' || matrix.service == 'ai'
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+
+      - name: Set up Node.js
+        if: matrix.service == 'frontend'
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Lint Backend
+        if: matrix.service == 'backend'
+        run: |
+          pip install flake8
+          flake8 Backend_Databse/
+
+      - name: Lint Frontend
+        if: matrix.service == 'frontend'
+        run: |
+          npm install eslint
+          npx eslint Frontend/
+
+      - name: Lint AI Service
+        if: matrix.service == 'ai'
+        run: |
+          pip install flake8
+          flake8 AIML/
+
+      - name: Build Docker Image
+        run: |
+          docker build -f Devops_Integration/Dockerfile.${{ matrix.service }} -t mmind-${{ matrix.service }} .
