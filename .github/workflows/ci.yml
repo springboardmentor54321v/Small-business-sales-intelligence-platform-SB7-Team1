@@ -42,9 +42,10 @@ jobs:
 
       - name: Lint frontend
         if: matrix.service == 'frontend'
+        working-directory: Frontend
         run: |
-          npm install --no-audit --no-fund --prefix Frontend
-          npx --yes eslint@8.57.0 Frontend --ext .js,.jsx --no-error-on-unmatched-pattern --parser-options '{"ecmaVersion":2020,"sourceType":"module","ecmaFeatures":{"jsx":true}}' || true
+          npm install --no-audit --no-fund
+          npx --yes eslint@8.57.0 . --ext .js,.jsx --no-error-on-unmatched-pattern --parser-options '{"ecmaVersion":2020,"sourceType":"module","ecmaFeatures":{"jsx":true}}' || true
 
       - name: Lint AI service
         if: matrix.service == 'ai'
