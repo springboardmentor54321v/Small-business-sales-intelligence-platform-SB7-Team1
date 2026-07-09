@@ -54,11 +54,16 @@ jobs:
           python -m flake8 AIML --count --exit-zero || true
 
       - name: Build Docker image
+        shell: bash
         run: |
-          if [ "${{ matrix.service }}" = "frontend" ]; then
-            docker build -f Devops_Integration/Dockerfile.frontend -t sb7-frontend .
-          elif [ "${{ matrix.service }}" = "backend" ]; then
-            docker build -f Devops_Integration/Dockerfile.backend -t sb7-backend .
-          else
-            docker build -f Devops_Integration/Dockerfile.ai -t sb7-ai .
-          fi
+          case "${{ matrix.service }}" in
+            frontend)
+              docker build -f Devops_Integration/Dockerfile.frontend -t sb7-frontend .
+              ;;
+            backend)
+              docker build -f Devops_Integration/Dockerfile.backend -t sb7-backend .
+              ;;
+            *)
+              docker build -f Devops_Integration/Dockerfile.ai -t sb7-ai .
+              ;;
+          esac
