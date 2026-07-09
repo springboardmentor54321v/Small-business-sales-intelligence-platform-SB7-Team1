@@ -55,4 +55,10 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -f Devops_Integration/Dockerfile.${{ matrix.service }} -t sb7-${{ matrix.service }} .
+          if [ "${{ matrix.service }}" = "frontend" ]; then
+            docker build -f Devops_Integration/Dockerfile.frontend -t sb7-frontend .
+          elif [ "${{ matrix.service }}" = "backend" ]; then
+            docker build -f Devops_Integration/Dockerfile.backend -t sb7-backend .
+          else
+            docker build -f Devops_Integration/Dockerfile.ai -t sb7-ai .
+          fi
